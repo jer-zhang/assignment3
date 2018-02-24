@@ -20,6 +20,9 @@ import java.io.*;
 public class Main {
 	
 	// static variables and constants only here.
+	private static AdjacencyList al;
+	private static Set<String> dict;
+	private final static int WORD_SIZE = 5;
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -35,32 +38,30 @@ public class Main {
 			ps = System.out;			// default output to Stdout
 		}
 		initialize();
-		
-		// TODO methods to read in words, output ladder
-		
-		AdjacencyList al = new AdjacencyList(makeDictionary());
-		LinkedList<String> words = al.al.get("SMART");
-		for (String s : words) {
-			System.out.println(s);
-		}
-		
-		/*
+				
 		while (true) {
 			ArrayList<String> words = parse(kb);
-			if (words.get(0).equals("/QUIT")) {
+			if (words.isEmpty()) {
 				return;
 			}
 			
-			
-
+			ArrayList<String> ladder = getWordLadderDFS(words.get(0), words.get(1));
+			if (ladder.size() != 2) {
+				System.out.println("A " + ladder.size() + "-rung word ladder exists between " + words.get(0).toLowerCase() + " and " + words.get(1).toLowerCase() + ".");
+			} else {
+				System.out.println("No word ladder can be found between " + words.get(0).toLowerCase() + " and " + words.get(1).toLowerCase() + ".");
+			}
+			printLadder(ladder);
 		}
-		*/
+		
 	}
 	
+	/**
+	 * This method initializes the dictionary and adjacency list
+	 */
 	public static void initialize() {
-		// initialize your static variables or constants here.
-		// We will call this method before running our JUNIT tests.  So call it 
-		// only once at the start of main.
+		dict = makeDictionary();
+		al = new AdjacencyList(dict);
 	}
 	
 	/**
@@ -71,38 +72,114 @@ public class Main {
 	public static ArrayList<String> parse(Scanner keyboard) {
 		ArrayList<String> words = new ArrayList<>();
 		System.out.println("Enter starting and ending words: ");
-		words.add(keyboard.next().toUpperCase());
-		if (!words.get(0).equals("/QUIT")) {
+		String word = keyboard.next();
+		if (word != "/quit") {
+			words.add(word.toUpperCase());
 			words.add(keyboard.next().toUpperCase());
 		}
 		return words;
 	}
 	
+	/**
+	 * This method does a DFS to find a word ladder between start and end, if
+	 * start and end appear in the dictionary. Otherwise, it will return a two
+	 * element word ladder containing just start and end
+	 * @param start Starting string
+	 * @param end Ending string
+	 * @return Word ladder
+	 */
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
 		
 		// Returned list should be ordered start to end.  Include start and end.
 		// If ladder is empty, return list with just start and end.
 		// TODO some code
-		Set<String> dict = makeDictionary();
 		// TODO more code
+		
 		ArrayList<String> ladder = new ArrayList<String>();
+		if (dict.contains(start) && dict.contains(end)) {
+			Set<String> visited = new HashSet<String>();
+			ladder.add(start);
+			visited.add(start);
+			if (!DFS(start, end, ladder, visited)) {
+				ladder.add(end);
+			}
+		} else {
+			ladder.add(start);
+			ladder.add(end);
+		}
+		return ladder;
+	}
+	
+	/**
+	 * This recursive method will do a DFS to find a word ladder between cur and end
+	 * @param cur Current string
+	 * @param end End string
+	 * @param ladder Word ladder
+	 * @param visited Set of words visited
+	 * @return True if word ladder was found, false otherwise
+	 */
+	private static boolean DFS(String cur, String end, ArrayList<String> ladder, Set<String> visited) {
+		if (cur.equals(end)) {
+			return true;
+		}
+		visited.add(cur);
 		
+		// Takes adjacency list and sorts by letters matching end string
+		SortList sortList = new SortList();
+		for (String s : al.getLL(cur)) {
+			sortList.add(s, lettersShared(s, end));
+		}
+		sortList.sort();
+		ArrayList<String> sortedWords = sortList.getStrings();
 		
-		return null; // replace this line later with real return
+		for (String s : sortedWords) {
+			if (!visited.contains(s)) {
+				ladder.add(s);
+				if (DFS(s, end, ladder, visited)) {
+					return true;
+				}
+				ladder.remove(ladder.size()-1);
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * This method compares two strings of the same size and returns the number shared letters in the same index
+	 * @param s1 First string
+	 * @param s2 Second string
+	 * @return Number of letters shared
+	 */
+	private static int lettersShared(String s1, String s2) {
+		int lettersShared = 0;
+		for (int i = 0; i < WORD_SIZE; i++) {
+			if (s1.charAt(i) == s2.charAt(i)) {
+				lettersShared++;
+			}
+		}
+		return lettersShared;
 	}
 	
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
+
+		ArrayList<String> ladder = new ArrayList<String>();
+		Queue<String> bfs = new LinkedList<String>();
+		Set<String> visited = new HashSet<String>();
 		
-		// TODO some code
-		Set<String> dict = makeDictionary();
-		// TODO more code
+		
+    	
 		
 		return null; // replace this line later with real return
 	}
     
-	
+	/**
+	 * This method prints the word ladder to the console
+	 * @param ladder
+	 */
 	public static void printLadder(ArrayList<String> ladder) {
-		
+		for (String s : ladder) {
+			System.out.println(s.toLowerCase());
+		}
 	}
 	// TODO
 	// Other private static methods here

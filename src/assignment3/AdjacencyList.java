@@ -4,7 +4,7 @@ import java.util.*;
 
 public class AdjacencyList {
 	
-	private int WORD_SIZE = 5;
+	private final static int WORD_SIZE = 5;
 	public Map<String, LinkedList<String>> al = new HashMap<String, LinkedList<String>>();
 	
 	/**
@@ -33,6 +33,10 @@ public class AdjacencyList {
 				}
 			}
 		}
+	}
+	
+	public LinkedList<String> getLL(String s) {
+		return al.get(s);
 	}
 	
 }
