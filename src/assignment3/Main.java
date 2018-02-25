@@ -38,13 +38,21 @@ public class Main {
 			ps = System.out;			// default output to Stdout
 		}
 		initialize();
-				
+		
+		/*
+		for (String s : al.getLL("READS")) {
+			System.out.println(s);
+		}
+		*/
+		
+		
 		while (true) {
 			ArrayList<String> words = parse(kb);
 			if (words.isEmpty()) {
 				return;
 			}
 			
+			/*
 			ArrayList<String> ladder = getWordLadderDFS(words.get(0), words.get(1));
 			if (ladder.size() != 2) {
 				System.out.println("A " + ladder.size() + "-rung word ladder exists between " + words.get(0).toLowerCase() + " and " + words.get(1).toLowerCase() + ".");
@@ -52,7 +60,18 @@ public class Main {
 				System.out.println("No word ladder can be found between " + words.get(0).toLowerCase() + " and " + words.get(1).toLowerCase() + ".");
 			}
 			printLadder(ladder);
+			*/
+			
+			ArrayList<String> ladder = getWordLadderBFS(words.get(0), words.get(1));
+			if (ladder.size() != 2) {
+				System.out.println("A " + ladder.size() + "-rung word ladder exists between " + words.get(0).toLowerCase() + " and " + words.get(1).toLowerCase() + ".");
+			} else {
+				System.out.println("No word ladder can be found between " + words.get(0).toLowerCase() + " and " + words.get(1).toLowerCase() + ".");
+			}
+			printLadder(ladder);
+			
 		}
+		
 		
 	}
 	
@@ -74,8 +93,8 @@ public class Main {
 		System.out.println("Enter starting and ending words: ");
 		String word = keyboard.next();
 		if (word != "/quit") {
-			words.add(word.toUpperCase());
-			words.add(keyboard.next().toUpperCase());
+			words.add(word.toLowerCase());
+			words.add(keyboard.next().toLowerCase());
 		}
 		return words;
 	}
@@ -92,8 +111,8 @@ public class Main {
 		
 		// Returned list should be ordered start to end.  Include start and end.
 		// If ladder is empty, return list with just start and end.
-		// TODO some code
-		// TODO more code
+		start = start.toUpperCase();
+		end = end.toUpperCase();
 		
 		ArrayList<String> ladder = new ArrayList<String>();
 		if (dict.contains(start) && dict.contains(end)) {
@@ -162,14 +181,46 @@ public class Main {
 	
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
 
-		ArrayList<String> ladder = new ArrayList<String>();
-		Queue<String> bfs = new LinkedList<String>();
-		Set<String> visited = new HashSet<String>();
-		
-		
+		start = start.toUpperCase();
+		end = end.toUpperCase();
     	
+		ArrayList<String> tempLadder = new ArrayList<String>();
 		
-		return null; // replace this line later with real return
+		if (dict.contains(start) && dict.contains(end)) {
+			Queue<ArrayList<String>> q = new LinkedList<ArrayList<String>>();
+			Set<String> visited = new HashSet<String>();
+			
+			tempLadder.add(start);
+			q.add(tempLadder);
+			visited.add(start);
+			
+			while (!q.isEmpty()) {
+				if (q.peek().get(q.peek().size() - 1).equals(end)) {
+					tempLadder = q.peek();
+					break;
+				} else {
+					for (String s : al.getLL(q.peek().get(q.peek().size()-1))) {
+						if (!visited.contains(s)) {
+							visited.add(s);
+							tempLadder = new ArrayList<String>(q.peek());
+							tempLadder.add(s);
+							q.add(tempLadder);
+						}
+					}
+					q.remove();
+				}
+			}
+			if (q.isEmpty()) {
+				tempLadder = new ArrayList<String>();
+				tempLadder.add(start);
+				tempLadder.add(end);
+			}
+		} else {
+			tempLadder.add(start);
+			tempLadder.add(end);
+		}
+		
+		return tempLadder;
 	}
     
 	/**
