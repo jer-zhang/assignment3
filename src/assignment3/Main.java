@@ -24,9 +24,9 @@ public class Main {
 	private static Set<String> dict;
 	private final static int WORD_SIZE = 5;
 	
-	/* // Random object to generate random ints
+	 // Random object to generate random ints
 	static Random rand = new Random();
-	*/ // Random object to generate random ints
+	 // Random object to generate random ints
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -60,10 +60,8 @@ public class Main {
 			ArrayList<String> ladder = getWordLadderDFS(words.get(0), words.get(1));
 			printLadder(ladder);
 			
-
 			ArrayList<String> ladder2 = getWordLadderBFS(words.get(0), words.get(1));
 			printLadder(ladder2);
-			
 		}
 	}
 	
