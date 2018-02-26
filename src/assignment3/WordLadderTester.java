@@ -113,6 +113,6 @@ public class WordLadderTester {
 		outContent.reset();
 		Main.printLadder(res);
 		String str = outContent.toString().replace("\n", "").replace(".", "").trim();
-		assertEquals("no word ladder can be found between twixt and hakus", str);
+		assertEquals("No word ladder can be found between twixt and hakus", str);
 	}
 }

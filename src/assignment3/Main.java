@@ -24,6 +24,10 @@ public class Main {
 	private static Set<String> dict;
 	private final static int WORD_SIZE = 5;
 	
+	/* // Random object to generate random ints
+	static Random rand = new Random();
+	*/ // Random object to generate random ints
+	
 	public static void main(String[] args) throws Exception {
 		
 		Scanner kb;	// input Scanner for commands
@@ -39,40 +43,28 @@ public class Main {
 		}
 		initialize();
 		
-		/*
-		for (String s : al.getLL("READS")) {
-			System.out.println(s);
-		}
-		*/
-		
-		
 		while (true) {
+			
 			ArrayList<String> words = parse(kb);
 			if (words.isEmpty()) {
 				return;
 			}
 			
-			/*
-			ArrayList<String> ladder = getWordLadderDFS(words.get(0), words.get(1));
-			if (ladder.size() != 2) {
-				System.out.println("A " + ladder.size() + "-rung word ladder exists between " + words.get(0).toLowerCase() + " and " + words.get(1).toLowerCase() + ".");
-			} else {
-				System.out.println("No word ladder can be found between " + words.get(0).toLowerCase() + " and " + words.get(1).toLowerCase() + ".");
-			}
-			printLadder(ladder);
-			*/
+			/* // Generates random words from dictionary
+			ArrayList<String> words = new ArrayList<String>();
+			ArrayList<String> listDict = new ArrayList<String>(dict);
+			words.add(listDict.get(rand.nextInt(listDict.size())));
+			words.add(listDict.get(rand.nextInt(listDict.size())));
+			*/ // Generates random words from dictionary
 			
-			ArrayList<String> ladder = getWordLadderBFS(words.get(0), words.get(1));
-			if (ladder.size() != 2) {
-				System.out.println("A " + ladder.size() + "-rung word ladder exists between " + words.get(0).toLowerCase() + " and " + words.get(1).toLowerCase() + ".");
-			} else {
-				System.out.println("No word ladder can be found between " + words.get(0).toLowerCase() + " and " + words.get(1).toLowerCase() + ".");
-			}
+			ArrayList<String> ladder = getWordLadderDFS(words.get(0), words.get(1));
 			printLadder(ladder);
+			
+
+			ArrayList<String> ladder2 = getWordLadderBFS(words.get(0), words.get(1));
+			printLadder(ladder2);
 			
 		}
-		
-		
 	}
 	
 	/**
@@ -103,8 +95,8 @@ public class Main {
 	 * This method does a DFS to find a word ladder between start and end, if
 	 * start and end appear in the dictionary. Otherwise, it will return a two
 	 * element word ladder containing just start and end
-	 * @param start Starting string
-	 * @param end Ending string
+	 * @param start Starting word
+	 * @param end Ending word
 	 * @return Word ladder
 	 */
 	public static ArrayList<String> getWordLadderDFS(String start, String end) {
@@ -146,7 +138,7 @@ public class Main {
 		// Takes adjacency list and sorts by letters matching end string
 		SortList sortList = new SortList();
 		for (String s : al.getLL(cur)) {
-			sortList.add(s, lettersShared(s, end));
+			sortList.add(s, lettersShared(s, end), al.getLL(s).size());
 		}
 		sortList.sort();
 		ArrayList<String> sortedWords = sortList.getStrings();
@@ -179,8 +171,15 @@ public class Main {
 		return lettersShared;
 	}
 	
+	/**
+	 * This method does a BFS to find a word ladder between start and end, if
+	 * start and end appear in the dictionary. Otherwise, it will return a two
+	 * element word ladder containing just start and end
+	 * @param start Starting word
+	 * @param end Ending word
+	 * @return Word ladder
+	 */
     public static ArrayList<String> getWordLadderBFS(String start, String end) {
-
 		start = start.toUpperCase();
 		end = end.toUpperCase();
     	
@@ -194,6 +193,7 @@ public class Main {
 			q.add(tempLadder);
 			visited.add(start);
 			
+			// Performs the BFS
 			while (!q.isEmpty()) {
 				if (q.peek().get(q.peek().size() - 1).equals(end)) {
 					tempLadder = q.peek();
@@ -210,11 +210,14 @@ public class Main {
 					q.remove();
 				}
 			}
+			
+			// If the queue is empty, there is no word ladder
 			if (q.isEmpty()) {
 				tempLadder = new ArrayList<String>();
 				tempLadder.add(start);
 				tempLadder.add(end);
 			}
+			
 		} else {
 			tempLadder.add(start);
 			tempLadder.add(end);
@@ -225,15 +228,19 @@ public class Main {
     
 	/**
 	 * This method prints the word ladder to the console
-	 * @param ladder
+	 * @param ladder The ladder to be printed
 	 */
 	public static void printLadder(ArrayList<String> ladder) {
-		for (String s : ladder) {
-			System.out.println(s.toLowerCase());
+		if (ladder.size() != 2) {
+			System.out.println("A " + ladder.size() + "-rung word ladder exists between " + ladder.get(0).toLowerCase() + " and " + ladder.get(ladder.size()-1).toLowerCase() + ".");
+			for (String s : ladder) {
+				System.out.println(s.toLowerCase());
+			}
+		} else {
+			System.out.println("No word ladder can be found between " + ladder.get(0).toLowerCase()+ " and " + ladder.get(ladder.size()-1).toLowerCase() + ".");
 		}
+	
 	}
-	// TODO
-	// Other private static methods here
 
 	/* Do not modify makeDictionary */
 	public static Set<String>  makeDictionary () {

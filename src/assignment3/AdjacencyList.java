@@ -35,8 +35,12 @@ public class AdjacencyList {
 		}
 	}
 	
+	/**
+	 * This accessor returns the linked list connected to the s key
+	 * @param s Input string
+	 * @return Linked list of words adjacent to the input string
+	 */
 	public LinkedList<String> getLL(String s) {
 		return al.get(s);
 	}
-	
 }
