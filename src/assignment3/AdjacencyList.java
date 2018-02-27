@@ -1,3 +1,13 @@
+/* WORD LADDER AdjacencyList.java
+ * EE422C Project 3 submission by
+ * Jerry Zhang
+ * jz9954
+ * 15465
+ * Slip days used: 0
+ * Git URL: https://github.com/jer-zhang/assignment3.git
+ * Spring 2018
+ */
+
 package assignment3;
 
 import java.util.*;

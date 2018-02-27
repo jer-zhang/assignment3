@@ -1,17 +1,12 @@
 /* WORD LADDER Main.java
  * EE422C Project 3 submission by
- * Replace <...> with your actual data.
- * <Student1 Name>
- * <Student1 EID>
- * <Student1 5-digit Unique No.>
- * <Student2 Name>
- * <Student2 EID>
- * <Student2 5-digit Unique No.>
- * Slip days used: <0>
- * Git URL:
- * Fall 2017
+ * Jerry Zhang
+ * jz9954
+ * 15465
+ * Slip days used: 0
+ * Git URL: https://github.com/jer-zhang/assignment3.git
+ * Spring 2018
  */
-
 
 package assignment3;
 import java.util.*;
@@ -24,9 +19,9 @@ public class Main {
 	private static Set<String> dict;
 	private final static int WORD_SIZE = 5;
 	
-	 // Random object to generate random ints
+	// Random object to generate random ints
 	static Random rand = new Random();
-	 // Random object to generate random ints
+	// Random object to generate random ints
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -44,18 +39,17 @@ public class Main {
 		initialize();
 		
 		while (true) {
-			
 			ArrayList<String> words = parse(kb);
 			if (words.isEmpty()) {
 				return;
 			}
 			
-			/* // Generates random words from dictionary
-			ArrayList<String> words = new ArrayList<String>();
-			ArrayList<String> listDict = new ArrayList<String>(dict);
-			words.add(listDict.get(rand.nextInt(listDict.size())));
-			words.add(listDict.get(rand.nextInt(listDict.size())));
-			*/ // Generates random words from dictionary
+//			// Generates random words from dictionary
+//			ArrayList<String> words = new ArrayList<String>();
+//			ArrayList<String> listDict = new ArrayList<String>(dict);
+//			words.add(listDict.get(rand.nextInt(listDict.size())));
+//			words.add(listDict.get(rand.nextInt(listDict.size())));
+//			// Generates random words from dictionary
 			
 			ArrayList<String> ladder = getWordLadderDFS(words.get(0), words.get(1));
 			printLadder(ladder);
@@ -109,8 +103,19 @@ public class Main {
 			Set<String> visited = new HashSet<String>();
 			ladder.add(start);
 			visited.add(start);
-			if (!DFS(start, end, ladder, visited)) {
+			try {
+				if (!DFS(start, end, ladder, visited)) {
+					ladder.add(end);
+				}
+			} catch (StackOverflowError s) {
+				ladder = new ArrayList<String>();
+				visited = new HashSet<String>();
 				ladder.add(end);
+				visited.add(end);
+				if (!DFS(end, start, ladder, visited)) {
+					ladder.add(start);
+				}
+				Collections.reverse(ladder);
 			}
 		} else {
 			ladder.add(start);
@@ -132,7 +137,7 @@ public class Main {
 			return true;
 		}
 		visited.add(cur);
-		
+
 		// Takes adjacency list and sorts by letters matching end string
 		SortList sortList = new SortList();
 		for (String s : al.getLL(cur)) {
@@ -230,14 +235,13 @@ public class Main {
 	 */
 	public static void printLadder(ArrayList<String> ladder) {
 		if (ladder.size() != 2) {
-			System.out.println("A " + ladder.size() + "-rung word ladder exists between " + ladder.get(0).toLowerCase() + " and " + ladder.get(ladder.size()-1).toLowerCase() + ".");
+			System.out.println("a " + ladder.size() + "-rung word ladder exists between " + ladder.get(0).toLowerCase() + " and " + ladder.get(ladder.size()-1).toLowerCase() + ".");
 			for (String s : ladder) {
 				System.out.println(s.toLowerCase());
 			}
 		} else {
-			System.out.println("No word ladder can be found between " + ladder.get(0).toLowerCase()+ " and " + ladder.get(ladder.size()-1).toLowerCase() + ".");
+			System.out.println("no word ladder can be found between " + ladder.get(0).toLowerCase()+ " and " + ladder.get(ladder.size()-1).toLowerCase() + ".");
 		}
-	
 	}
 
 	/* Do not modify makeDictionary */

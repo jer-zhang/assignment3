@@ -51,7 +51,7 @@ public class WordLadderTester {
 
 		int diff = 0;
 		for (int i = 0; i < s1.length(); i++) {
-			if (s1.charAt(i) != s2.charAt(i) && diff++ > 1) {
+			if (s1.charAt(i) != s2.charAt(i) && ++diff > 1) {
 				return false;
 			}
 		}
@@ -63,7 +63,6 @@ public class WordLadderTester {
 	@Test(timeout = 30000)
 	public void testBFS1() {
 		ArrayList<String> res = Main.getWordLadderBFS("hello", "cells");
-
 		if (res != null) {
 			HashSet<String> set = new HashSet<String>(res);
 			assertEquals(set.size(), res.size());
